@@ -12,9 +12,9 @@ public class DbInitializer
 
         var orders = new Models.Access[]
         {
-                new Models.Access{Fullname="Usuario Aforo255",Username="aforo255",Password="123456"},
-                new Models.Access{Fullname="Cesar",Username="cceron",Password="123456"},
-                new Models.Access{Fullname="Leonel Messi",Username="lmessi",Password="123"},
+                new Models.Access{Username="aforo255",Password="123456"},
+                new Models.Access{Username="cceron",Password="123456"},
+                new Models.Access{Username="mceron",Password="654321"},
         };
         foreach (Models.Access s in orders)
         {
