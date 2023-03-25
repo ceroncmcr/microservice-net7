@@ -14,11 +14,11 @@ public class PaymentModel
 
     [Key]
     [Column("id_transaccion")]
-    public int? IdTransaction { get; set; }
+    public int IdTransaction { get; set; }
     [Column("id_invoice")]
-    public int? InvoiceId { get; set; }
+    public int InvoiceId { get; set; }
     [Column("amount")]
-    public decimal? Amount { get; set; }
+    public decimal Amount { get; set; }
     [Column("date")]
     public string? CreationDate { get; set; }
 }

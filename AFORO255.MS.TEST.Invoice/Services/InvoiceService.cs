@@ -1,5 +1,6 @@
 ﻿using AFORO255.MS.TEST.Invoice.DTOs;
 using AFORO255.MS.TEST.Invoice.Persistences;
+using Microsoft.EntityFrameworkCore;
 
 namespace AFORO255.MS.TEST.Invoice.Services;
 
@@ -39,5 +40,14 @@ public class InvoiceService : IInvoiceService
         };
 
         return response;
+    }
+
+    public int updateInvoide(int id)
+    {
+        var result = _context.Invoice.FirstOrDefault(x => x.InvoiceId == id);
+        result.State = 1;
+
+        _context.Entry(result).State = EntityState.Modified;
+        return _context.SaveChanges();        
     }
 }

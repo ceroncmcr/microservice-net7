@@ -6,4 +6,5 @@ public interface IInvoiceService
 {
     IEnumerable<InvoiceResponse> GetAll();
     InvoiceResponse GetById(int id);
+    int updateInvoide(int id);
 }
