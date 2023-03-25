@@ -1,3 +1,5 @@
+using Aforo255.Cross.Discovery.Consul;
+using Aforo255.Cross.Discovery.Fabio;
 using Aforo255.Cross.Event.Src;
 using Aforo255.Cross.Event.Src.Bus;
 using AFORO255.MS.TEST.Invoice.Data;
@@ -11,15 +13,23 @@ using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureAppConfiguration((host, builder) =>
+{
+    var c = builder.Build();
+    builder.AddNacosConfiguration(c.GetSection("nacosConfig"));
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ContextDatabase>(opt =>
 {
-    opt.UseNpgsql(builder.Configuration["postgres:cn"]);
+    opt.UseNpgsql(builder.Configuration["cn:postgres"]);
 });
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddRabbitMQ();
+builder.Services.AddConsul();
+builder.Services.AddFabio();
 
 builder.Services.AddTransient<InvoiceEventHandler>();
 builder.Services.AddTransient<IEventHandler<InvoiceCreatedEvent>, InvoiceEventHandler>();
@@ -33,6 +43,8 @@ DbCreated.CreateDbIfNotExists(app);
 ConfigureEventBus(app);
 
 app.MapControllers();
+
+app.UseConsul();
 
 app.Run();
 
