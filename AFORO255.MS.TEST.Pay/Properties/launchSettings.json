@@ -1,4 +1,20 @@
 {
+  "profiles": {
+    "Local.Pay": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "local"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5202"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  },
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -6,18 +22,6 @@
     "iisExpress": {
       "applicationUrl": "http://localhost:49636",
       "sslPort": 44306
-    }
-  },
-  "profiles": {
-    "Local.Pay": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "launchUrl": "",
-      "applicationUrl": "http://localhost:5202",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "local"
-      }
     }
   }
 }

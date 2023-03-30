@@ -1,0 +1,63 @@
+version: "3.5"
+
+services:
+  service-security:
+    image: image-security
+    container_name: app-securiry
+    build:
+      dockerfile: ./AFORO255.MS.TEST.Security/Dockerfile
+      context: .
+    restart: always
+    environment:
+    - ASPNETCORE_URLS=http://*:80
+    - ASPNETCORE_ENVIRONMENT=docker
+    ports:
+    - 5200:80
+    networks:
+    - aforo255
+  service-invoice:
+    image: image-invoice
+    container_name: app-invoices
+    build:
+      dockerfile: ./AFORO255.MS.TEST.Invoice/Dockerfile
+      context: .
+    restart: always
+    environment:
+    - ASPNETCORE_URLS=http://*:80
+    - ASPNETCORE_ENVIRONMENT=docker
+    ports:
+    - 5201:80
+    networks:
+    - aforo255
+  service-pay:
+    image: image-pay
+    container_name: app-pay
+    build:
+      dockerfile: ./AFORO255.MS.TEST.Pay/Dockerfile
+      context: .
+    restart: always
+    environment:
+    - ASPNETCORE_URLS=http://*:80
+    - ASPNETCORE_ENVIRONMENT=docker
+    ports:
+    - 5202:80
+    networks:
+    - aforo255
+  service-transaction:
+    image: image-transaction
+    container_name: app-transaction
+    build:
+      dockerfile: ./AFORO255.MS.TEST.Transaction/Dockerfile
+      context: .
+    restart: always
+    environment:
+    - ASPNETCORE_URLS=http://*:80
+    - ASPNETCORE_ENVIRONMENT=docker
+    ports:
+    - 5203:80
+    networks:
+    - aforo255
+
+networks:
+  aforo255:
+    name: aforo255-test
