@@ -17,6 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AFORO255.MS.TEST.Transactio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{4919D42E-AFA6-4D49-84A5-B098437A182E}"
 	ProjectSection(SolutionItems) = preProject
+		docker-compose-all.yml = docker-compose-all.yml
 		docker-compose-app.yml = docker-compose-app.yml
 		docker-compose-databases.yml = docker-compose-databases.yml
 		docker-compose-gateway.yml = docker-compose-gateway.yml

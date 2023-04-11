@@ -1,0 +1,181 @@
+version: "3.5"
+
+services:
+#db
+  service-mysql:
+    image: mysql:8.0.26
+    container_name: db-mysql
+    restart: always
+    environment:
+    - MYSQL_ROOT_PASSWORD=Aforo255#2050
+    ports:
+    - 3307:3306
+    - 33061:33060
+    networks:
+    - aforo255
+  service-sql:
+    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+    container_name: db-mssql
+    restart: always
+    ports:
+    - 1434:1433
+    environment:
+    - ACCEPT_EULA=Y
+    - SA_PASSWORD=Aforo255#2050
+    networks:
+    - aforo255
+  service-postgres:
+    image: postgres:alpine3.14
+    container_name: db-postgres
+    restart: always
+    environment:
+    - POSTGRES_PASSWORD=Aforo255#2050
+    ports:
+    - 5434:5432
+    networks:
+    - aforo255
+  service-mongo:
+    image: mongo:5.0.2
+    container_name: db-mongo
+    restart: always
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=aforo255
+    - MONGO_INITDB_ROOT_PASSWORD=Aforo255#2050
+    ports:
+    - 27018:27017
+    networks:
+    - aforo255
+#services
+  service-event:
+    image: rabbitmq:3.8.13-management
+    container_name: bus-service-test
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=aforo255
+      - RABBITMQ_DEFAULT_PASS=aforo255
+    ports:
+    - 5672:5672
+    - 15672:15672
+    networks:
+    - aforo255  
+  service-discovery:
+    image: consul:1.9.10
+    container_name: consul-service-test
+    restart: always
+    ports:
+    - 8500:8500
+    networks:
+    - aforo255 
+  service-balancer:
+    image: fabiolb/fabio:1.5.15-go1.15.5
+    container_name: balancer-service-test
+    restart: always
+    environment:
+    - FABIO_REGISTRY_CONSUL_ADDR=consul-service-test:8500
+    ports:
+    - 9998:9998
+    - 9999:9999
+    networks:
+    - aforo255
+    depends_on:
+    - service-discovery
+  service-config:
+    image: nacos/nacos-server:v2.0.3
+    container_name: config-service-test 
+    restart: always
+    environment:
+    - MODE=standalone
+    ports:
+    - 8848:8848
+    networks:
+    - aforo255
+  service-gateway-kong:    
+    image: kong:latest
+    container_name: app-gateway
+    restart: always
+    volumes:
+      - ./kong.yml:/usr/local/kong/declarative/kong.yml
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/usr/local/kong/declarative/kong.yml
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "127.0.0.1:8001:8001"
+      - "127.0.0.1:8444:8444"
+    networks:
+    - aforo255
+#app
+  #service-security:
+  #  image: image-security
+  #  container_name: app-securiry
+  #  build:
+  #    dockerfile: ./AFORO255.MS.TEST.Security/Dockerfile
+  #    context: .
+  #  restart: always
+  #  environment:
+  #  - ASPNETCORE_URLS=http://*:80
+  #  - ASPNETCORE_ENVIRONMENT=docker
+  #  ports:
+  #  - 5200:80
+  #  networks:
+  #  - aforo255
+  #  depends_on:
+  #  - service-sql
+  #service-invoice:
+  #  image: image-invoice
+  #  container_name: app-invoices
+  #  build:
+  #    dockerfile: ./AFORO255.MS.TEST.Invoice/Dockerfile
+  #    context: .
+  #  restart: always
+  #  environment:
+  #  - ASPNETCORE_URLS=http://*:80
+  #  - ASPNETCORE_ENVIRONMENT=docker
+  #  ports:
+  #  - 5201:80
+  #  networks:
+  #  - aforo255
+  #  depends_on:
+  #  - service-postgres
+  #service-pay:
+  #  image: image-pay
+  #  container_name: app-pay
+  #  build:
+  #    dockerfile: ./AFORO255.MS.TEST.Pay/Dockerfile
+  #    context: .
+  #  restart: always
+  #  environment:
+  #  - ASPNETCORE_URLS=http://*:80
+  #  - ASPNETCORE_ENVIRONMENT=docker
+  #  ports:
+  #  - 5202:80
+  #  networks:
+  #  - aforo255
+  #  depends_on:
+  #  - service-mysql
+  #service-transaction:
+  #  image: image-transaction
+  #  container_name: app-transaction
+  #  build:
+  #    dockerfile: ./AFORO255.MS.TEST.Transaction/Dockerfile
+  #    context: .
+  #  restart: always
+  #  environment:
+  #  - ASPNETCORE_URLS=http://*:80
+  #  - ASPNETCORE_ENVIRONMENT=docker
+  #  ports:
+  #  - 5203:80
+  #  networks:
+  #  - aforo255
+  #  depends_on:
+  #  - service-mongo
+
+networks:
+  aforo255:
+    name: aforo255-test
